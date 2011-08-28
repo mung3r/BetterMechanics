@@ -10,5 +10,5 @@ commands:
         aliases: p
     bettermechanics:
         description: Change the text of signs
-        usage: /bettermechanics <cauldron>
+        usage: /bettermechanics reload <cauldron>
         aliases: bm

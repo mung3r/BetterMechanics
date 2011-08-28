@@ -68,7 +68,7 @@ public class BetterMechanics extends JavaPlugin {
                 if (sender instanceof Player) {
                     Player player = (Player) sender;
                     if (args.length == 0) {
-                        player.sendMessage(ChatColor.DARK_RED + "Incorrect usage. Usage: /pen <set|clear|setline|help>");
+                        player.sendMessage(ChatColor.DARK_RED + "Incorrect usage. Usage: /pen [set|clear|setline|help]");
                     } else {
                         Pen pen = new Pen();
                         if (args[0].equalsIgnoreCase("set")) {
@@ -96,9 +96,9 @@ public class BetterMechanics extends JavaPlugin {
                             }
                         } else if (args[0].equalsIgnoreCase("help")) {
                             player.sendMessage("Pen help. The char '^' is a linebreak. Commands:");
-                            player.sendMessage("/pen set <text> | set the sign text");
-                            player.sendMessage("/pen setline <line> <text> | set one line of the text");
-                            player.sendMessage("/pen clearline <line> | clears the specified line");
+                            player.sendMessage("/pen set [text] | set the sign text");
+                            player.sendMessage("/pen setline [line] [text] | set one line of the text");
+                            player.sendMessage("/pen clearline [line] | clears the specified line");
                             player.sendMessage("/pen clear | clears the current text");
                             player.sendMessage("/pen dump | dumps the current text");
                         } else {
