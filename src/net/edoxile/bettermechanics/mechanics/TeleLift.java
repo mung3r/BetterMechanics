@@ -77,7 +77,7 @@ public class TeleLift {
 
     public Location parseDestination() throws NumberFormatException {
         Location newLocation = player.getLocation();
-        String[] locations = (sign.getLine(2).concat(sign.getLine(3))).split(":");
+        String[] locations = sign.getLine(2).split(":");
         if (locations.length == 3) {
             newLocation.setX(Integer.parseInt(locations[0]) - 0.5);
             newLocation.setZ(Integer.parseInt(locations[1]) + 0.5);
