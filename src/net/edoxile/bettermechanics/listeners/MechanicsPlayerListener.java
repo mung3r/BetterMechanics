@@ -166,12 +166,16 @@ public class MechanicsPlayerListener extends PlayerListener {
                         }
                     }
                 }
-            } else if (event.getClickedBlock().getType() == Material.REDSTONE_WIRE && event.getPlayer().getItemInHand().getType() == Material.COAL) {
+            } else if (event.getClickedBlock().getTypeId() == Material.REDSTONE_WIRE.getId() && event.getPlayer().getItemInHand().getTypeId() == Material.COAL.getId()) {
                 if (!permissions.check(event.getPlayer(), "ammeter", event.getClickedBlock(), true)) {
                     return;
                 }
                 Ammeter ammeter = new Ammeter(config, event.getClickedBlock(), event.getPlayer());
                 ammeter.measure();
+            } else if (event.getClickedBlock().getTypeId() == Material.CHEST.getId() && event.getPlayer().getItemInHand().getTypeId() == Material.WOOD_HOE.getId()) {
+                if(!Cycler.cycle(event.getPlayer(), event.getClickedBlock(), config)){
+                    event.getPlayer().sendMessage(ChatColor.DARK_RED + "You don't have permissions to cycle chests here!");
+                }
             } else {
                 if (!event.getPlayer().getItemInHand().getType().isBlock() || event.getPlayer().getItemInHand().getType() == Material.AIR) {
                     Cauldron cauldron = Cauldron.preCauldron(event.getClickedBlock(), config, event.getPlayer());
