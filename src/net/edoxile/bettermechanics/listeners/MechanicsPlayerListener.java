@@ -175,6 +175,10 @@ public class MechanicsPlayerListener extends PlayerListener {
             } else if (event.getClickedBlock().getTypeId() == Material.CHEST.getId() && event.getPlayer().getItemInHand().getTypeId() == Material.WOOD_HOE.getId()) {
                 if(!Cycler.cycle(event.getPlayer(), event.getClickedBlock(), config)){
                     event.getPlayer().sendMessage(ChatColor.DARK_RED + "You don't have permissions to cycle chests here!");
+                    return;
+                } else {
+                    event.setCancelled(true);
+                    return;
                 }
             } else {
                 if (!event.getPlayer().getItemInHand().getType().isBlock() || event.getPlayer().getItemInHand().getType() == Material.AIR) {
