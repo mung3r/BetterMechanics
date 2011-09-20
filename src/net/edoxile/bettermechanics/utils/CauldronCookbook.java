@@ -25,6 +25,7 @@ public class CauldronCookbook {
     private BetterMechanics instance;
     private Configuration config;
 
+    @SuppressWarnings("unchecked")
     public CauldronCookbook(BetterMechanics plugin) {
         instance = plugin;
         config = instance.getConfiguration();

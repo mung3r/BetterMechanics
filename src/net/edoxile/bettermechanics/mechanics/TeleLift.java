@@ -21,18 +21,20 @@ public class TeleLift {
     private static final Logger log = Logger.getLogger("Minecraft");
     private Sign sign;
     private Player player;
-    private MechanicsConfig.TeleLiftConfig config;
+    private MechanicsConfig config;
+    private MechanicsConfig.TeleLiftConfig teleLiftConfig;
     private static List<Integer> nonSolidBlockList = Arrays.asList(0, 6, 8, 9, 10, 11, 27, 28, 31, 32, 37, 38, 39, 40, 50, 51, 55, 59, 63, 65, 66, 68, 69, 70, 72, 75, 76, 78, 83, 90, 93, 94);
     private Location destination;
 
     public TeleLift(MechanicsConfig c, Sign s, Player p) {
         sign = s;
         player = p;
-        config = c.getTeleLiftConfig();
+        config = c;
+        teleLiftConfig = config.getTeleLiftConfig();
     }
 
     public boolean map() throws NumberFormatException {
-        if (!config.enabled)
+        if (!teleLiftConfig.enabled)
             return false;
         destination = parseDestination();
         if (destination.getY() <= 127) {
@@ -61,8 +63,10 @@ public class TeleLift {
     }
 
     public boolean movePlayer() {
+        Location oldloc = player.getLocation();
         if (player.teleport(destination)) {
             player.sendMessage(ChatColor.GOLD + "You magically teleported to an other location!");
+            config.addTeleportHistoryLine(player, oldloc);
             return true;
         } else {
             player.sendMessage(ChatColor.RED + "Something went wrong teleporting you!");
@@ -82,7 +86,7 @@ public class TeleLift {
             newLocation.setX(Integer.parseInt(locations[0]) - 0.5);
             newLocation.setZ(Integer.parseInt(locations[1]) + 0.5);
             newLocation.setY(Integer.parseInt(locations[2]));
-            if(newLocation.getY() < 2) {
+            if (newLocation.getY() < 2) {
                 player.sendMessage(ChatColor.RED + "Invalid Y location. Teleporting to y = 130");
                 newLocation.setY(130);
             }

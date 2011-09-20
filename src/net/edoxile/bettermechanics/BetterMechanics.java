@@ -1,5 +1,6 @@
 package net.edoxile.bettermechanics;
 
+import com.guntherdw.bukkit.tweakcraft.TweakcraftUtils;
 import net.edoxile.bettermechanics.exceptions.ConfigWriteException;
 import net.edoxile.bettermechanics.listeners.MechanicsBlockListener;
 import net.edoxile.bettermechanics.listeners.MechanicsPlayerListener;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.util.logging.Logger;
@@ -24,6 +26,7 @@ public class BetterMechanics extends JavaPlugin {
     public static final Logger log = Logger.getLogger("Minecraft");
     private MechanicsPlayerListener playerListener;
     private MechanicsBlockListener blockListener;
+    private TweakcraftUtils tcutils = null;
     private MechanicsConfig configManager;
     private File configFile;
 
@@ -38,6 +41,10 @@ public class BetterMechanics extends JavaPlugin {
             blockListener = new MechanicsBlockListener(configManager);
             playerListener = new MechanicsPlayerListener(configManager);
             registerEvents();
+            if (configManager.useTweakcraftUtils) {
+                log.info("[BetterMechanics] Using TweakcraftUtils!");
+                setupTweakcraftUtils();
+            }
             log.info("[BetterMechanics] Loading completed.");
         } catch (ConfigWriteException ex) {
             log.severe("[BetterMechanics] Couldn't create config file.");
@@ -147,5 +154,16 @@ public class BetterMechanics extends JavaPlugin {
         } else {
             return false;
         }
+    }
+
+    public void setupTweakcraftUtils() {
+        Plugin plugin = this.getServer().getPluginManager().getPlugin("TweakcraftUtils");
+        if (tcutils == null)
+            if (plugin != null)
+                tcutils = (TweakcraftUtils) plugin;
+    }
+
+    public TweakcraftUtils getTweakcraftUtils() {
+        return tcutils;
     }
 }

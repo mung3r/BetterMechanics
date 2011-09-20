@@ -8,6 +8,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.zones.Zones;
 import com.zones.model.ZoneBase;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -41,6 +42,7 @@ public class MechanicsConfig {
     public CauldronConfig cauldronConfig;
     public PermissionConfig permissionConfig;
     public PenConfig penConfig;
+    public boolean useTweakcraftUtils;
 
     public MechanicsConfig(BetterMechanics p) throws ConfigWriteException {
         plugin = p;
@@ -62,6 +64,14 @@ public class MechanicsConfig {
         cauldronConfig = new CauldronConfig();
         permissionConfig = new PermissionConfig();
         penConfig = new PenConfig();
+        useTweakcraftUtils = config.getBoolean("use-tweakcraftutils", false);
+    }
+
+    public void addTeleportHistoryLine(Player player, Location loc) {
+        if (useTweakcraftUtils && plugin.getTweakcraftUtils() != null) {
+            if (plugin.getTweakcraftUtils().getConfigHandler().enableTPBack)
+                plugin.getTweakcraftUtils().getTelehistory().addHistory(player.getName(), loc);
+        }
     }
 
     public void reloadCauldronConfig() {
@@ -259,12 +269,12 @@ public class MechanicsConfig {
             if (zones == null) {
                 return true;
             } else {
-                boolean canbuild = true;
+                boolean canhit = true;
                 ZoneBase zb = zones.getWorldManager(clickedBlock.getWorld()).getActiveZone(clickedBlock);
                 if (zb != null) {
-                    canbuild = zb.getAccess(player).canHit();
+                    canhit = zb.getAccess(player).canHit();
                 }
-                return canbuild;
+                return canhit;
             }
         }
 
@@ -288,8 +298,8 @@ public class MechanicsConfig {
             boolean allowed = false;
             if (checkPermissions(player, type)) {
                 if (checkWorldGuard(player, clickedBlock)) {
-                    if (skipCreateZones || checkZonesCreate(player, clickedBlock)) ;
-                    allowed = skipHitZones || checkZonesHit(player, clickedBlock);
+                    if (skipCreateZones || checkZonesCreate(player, clickedBlock))
+                        allowed = skipHitZones || checkZonesHit(player, clickedBlock);
                 }
             }
 
