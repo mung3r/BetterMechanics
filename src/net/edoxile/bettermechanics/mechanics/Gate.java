@@ -30,6 +30,7 @@ public class Gate {
     private boolean smallGate;
     private Set<Block> blockSet;
     private Chest chest;
+    private Material gateMaterial;
 
     public Gate(MechanicsConfig c, Sign s, Player p) {
         sign = s;
@@ -51,14 +52,22 @@ public class Gate {
         }
         smallGate = (SignUtil.getMechanicsType(sign) == MechanicsType.SMALL_GATE);
         int sw = (smallGate ? 1 : 4);
-        Block tempBlock = sign.getBlock().getRelative(SignUtil.getBackBlockFace(sign));
-        tempBlock = BlockMapper.mapColumn(tempBlock, sw, sw, Material.FENCE);
+        Block startBlock = sign.getBlock().getRelative(SignUtil.getBackBlockFace(sign));
+        Block tempBlock = null;
+        tempBlock = BlockMapper.mapColumn(startBlock, sw, sw, Material.FENCE);
         if (tempBlock == null) {
-            throw new BlockNotFoundException();
+            tempBlock = BlockMapper.mapColumn(startBlock, sw, sw, Material.IRON_FENCE);
+            if (tempBlock == null) {
+                throw new BlockNotFoundException();
+            } else {
+                gateMaterial = Material.IRON_FENCE;
+            }
+        } else {
+            gateMaterial = Material.FENCE;
         }
-        blockSet = BlockMapper.mapFlatRegion(tempBlock, Material.FENCE, config.maxWidth, config.maxLength);
+        blockSet = BlockMapper.mapFlatRegion(tempBlock, gateMaterial, config.maxWidth, config.maxLength);
         if (blockSet.isEmpty()) {
-            log.info("blockset empty?");
+            log.info("BlockSet is empty. No blocks were found.");
             return false;
         } else {
             return true;
@@ -71,13 +80,13 @@ public class Gate {
         try {
             for (Block b : blockSet) {
                 tempBlock = b.getRelative(BlockFace.DOWN);
-                while (tempBlock.getType() == Material.FENCE) {
+                while (tempBlock.getType() == gateMaterial) {
                     tempBlock.setType(Material.AIR);
                     tempBlock = tempBlock.getRelative(BlockFace.DOWN);
                     amount++;
                 }
             }
-            BlockbagUtil.safeAddItems(chest, new ItemStack(Material.FENCE, amount));
+            BlockbagUtil.safeAddItems(chest, new ItemStack(gateMaterial, amount));
             if (player != null) {
                 player.sendMessage(ChatColor.GOLD + "Gate opened!");
             }
@@ -85,7 +94,7 @@ public class Gate {
             for (Block b : blockSet) {
                 tempBlock = b.getRelative(BlockFace.DOWN);
                 while (tempBlock.getType() == Material.AIR && amount > 0) {
-                    tempBlock.setType(Material.FENCE);
+                    tempBlock.setType(gateMaterial);
                     tempBlock = tempBlock.getRelative(BlockFace.DOWN);
                     amount--;
                 }
@@ -105,19 +114,19 @@ public class Gate {
             for (Block b : blockSet) {
                 tempBlock = b.getRelative(BlockFace.DOWN);
                 while (canPassThrough(tempBlock.getType())) {
-                    tempBlock.setType(Material.FENCE);
+                    tempBlock.setType(gateMaterial);
                     tempBlock = tempBlock.getRelative(BlockFace.DOWN);
                     amount++;
                 }
             }
-            BlockbagUtil.safeRemoveItems(chest, new ItemStack(Material.FENCE, amount));
+            BlockbagUtil.safeRemoveItems(chest, new ItemStack(gateMaterial, amount));
             if (player != null) {
                 player.sendMessage(ChatColor.GOLD + "Gate closed!");
             }
         } catch (OutOfMaterialException ex) {
             for (Block b : blockSet) {
                 tempBlock = b.getRelative(BlockFace.DOWN);
-                while (tempBlock.getType() == Material.FENCE && amount > 0) {
+                while (tempBlock.getType() == gateMaterial && amount > 0) {
                     tempBlock.setType(Material.AIR);
                     tempBlock = tempBlock.getRelative(BlockFace.DOWN);
                     amount--;
@@ -133,7 +142,7 @@ public class Gate {
 
     public boolean isClosed() {
         for (Block b : blockSet) {
-            return b.getRelative(BlockFace.DOWN).getType() == Material.FENCE;
+            return b.getRelative(BlockFace.DOWN).getType() == gateMaterial;
         }
         return false;
     }
