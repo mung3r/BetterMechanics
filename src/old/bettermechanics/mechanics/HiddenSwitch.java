@@ -1,10 +1,8 @@
 package old.bettermechanics.mechanics;
 
-<<<<<<< HEAD
 import old.bettermechanics.utils.BlockMapper;
 import old.bettermechanics.utils.MechanicsConfig;
 import org.bukkit.Material;
->>>>>>> 8cbe55dd0dbe3e628d2a4ec5b67dd37cb98515c3
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
