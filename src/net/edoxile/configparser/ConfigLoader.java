@@ -1,7 +1,7 @@
 package net.edoxile.configparser;
 
+import net.edoxile.configparser.annotations.*;
 import org.bukkit.util.config.Configuration;
-import org.yaml.snakeyaml.error.YAMLException;
 import sun.plugin.dom.exception.PluginNotSupportedException;
 
 import java.lang.reflect.Field;
@@ -24,6 +24,8 @@ public class ConfigLoader {
     }
 
     public static void loadConfig(String pluginName, Object configableObject) throws PluginNotSupportedException {
+        if (configableObject.getClass().getAnnotation(ConfigEntity.class) == null)
+            return;
         Configuration config = pluginYamlMap.get(pluginName);
         if (config == null) {
             throw new PluginNotSupportedException(pluginName);
@@ -33,7 +35,7 @@ public class ConfigLoader {
         for (int i = 0; i < fields.length; i++) {
             Type fieldType = fields[i].getAnnotation(Type.class);
             if (fieldType != null) {
-                boolean isList = fields[i].getAnnotation(List.class) != null;
+                boolean isList = fields[i].getAnnotation(NodeList.class) != null;
                 Class<?> fieldClass = fieldType.value();
                 String fieldName = fields[i].getName();
                 try {

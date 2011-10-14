@@ -1,4 +1,4 @@
-package net.edoxile.configparser;
+package net.edoxile.configparser.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -14,9 +14,4 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Type {
     Class<?> value();
-}
-
-@Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-@interface List {
 }
