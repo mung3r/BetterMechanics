@@ -37,11 +37,12 @@ public class ConfigLoader {
             if (fieldType != null) {
                 boolean isList = fields[i].getAnnotation(NodeList.class) != null;
                 Class<?> fieldClass = fieldType.value();
+                String fieldClassName = (fieldClass.getName() == "Integer"?"Int":fieldClass.getName());
                 String fieldName = fields[i].getName();
                 try {
-                    Method getter = Configuration.class.getMethod("get" + fieldClass + (isList ? "List" : ""), String.class, (isList ? java.util.List.class : fieldClass));
+                    Method getter = Configuration.class.getMethod("get" + fieldClassName + (isList ? "List" : ""), String.class, (isList ? java.util.List.class : fieldClass));
                     Object data = getter.invoke(config, configableObject.getClass().toString() + "." + fieldName, null);
-                    Method setter = configableObject.getClass().getMethod("set" + fieldName, fieldClass);
+                    Method setter = configableObject.getClass().getMethod("set" + (fieldName.substring(0,1).toUpperCase() + fieldName.substring(1)), fieldClass);
                     setter.invoke(configableObject, data);
                 } catch (NoSuchMethodException e) {
                     log.severe("[ConfigParser] Method not found: " + e.getMessage());

@@ -17,17 +17,33 @@ import java.util.List;
 public class Gate implements ISignMechanic {
 
     @Type(Boolean.class)
-    private final boolean enabled = true;
+    private boolean enabled = true;
 
     @Type(Integer.class)
-    private final int maxLength = 32;
+    private int maxLength = 32;
 
     @Type(Integer.class)
-    private final int maxWidth = 3;
+    private int maxWidth = 3;
 
     @NodeList
     @Type(Integer.class)
-    private final List<Integer> materialList = Arrays.asList(Material.IRON_FENCE.getId(), Material.FENCE.getId());
+    private List<Integer> materialList = Arrays.asList(Material.IRON_FENCE.getId(), Material.FENCE.getId());
+
+    public void setEnabled(boolean isEnabled){
+        enabled=isEnabled;
+    }
+
+    public void setMaterialList(List<Integer> newMaterialList){
+        materialList = newMaterialList;
+    }
+
+    public void setMaxLength(int newMaxLength){
+        maxLength = newMaxLength;
+    }
+
+    public void setMaxWidth(int newMaxWidth){
+        maxWidth = newMaxWidth;
+    }
 
 
     public Gate() {
