@@ -13,38 +13,32 @@ import java.util.List;
  *
  * @author Edoxile
  */
-@ConfigEntity
+@ConfigEntity("gate")
 public class Gate implements ISignMechanic {
 
-    @Type(Boolean.class)
+    @Type(
+            node="enabled",
+            isList=false
+    )
     private boolean enabled = true;
 
-    @Type(Integer.class)
+    @Type(
+            node="max-length",
+            isList=false
+    )
     private int maxLength = 32;
 
-    @Type(Integer.class)
+    @Type(
+            node="max-width",
+            isList=false
+    )
     private int maxWidth = 3;
 
-    @NodeList
-    @Type(Integer.class)
+    @Type(
+            node="allowed-materials",
+            isList=true
+    )
     private List<Integer> materialList = Arrays.asList(Material.IRON_FENCE.getId(), Material.FENCE.getId());
-
-    public void setEnabled(boolean isEnabled){
-        enabled=isEnabled;
-    }
-
-    public void setMaterialList(List<Integer> newMaterialList){
-        materialList = newMaterialList;
-    }
-
-    public void setMaxLength(int newMaxLength){
-        maxLength = newMaxLength;
-    }
-
-    public void setMaxWidth(int newMaxWidth){
-        maxWidth = newMaxWidth;
-    }
-
 
     public Gate() {
         //Fill config vars
