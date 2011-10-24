@@ -10,8 +10,7 @@ import java.lang.annotation.Target;
  *
  * @author Edoxile
  */
-
-@Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface NodeList {
+public @interface ConfigEntityNode {
+    String value();
 }
