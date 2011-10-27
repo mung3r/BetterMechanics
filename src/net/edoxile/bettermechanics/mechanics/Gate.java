@@ -1,6 +1,5 @@
 package net.edoxile.bettermechanics.mechanics;
 
-import net.edoxile.configparser.ConfigEntity;
 import net.edoxile.configparser.annotations.*;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,7 +14,7 @@ import java.util.List;
  * @author Edoxile
  */
 @ConfigEntityNode("gate")
-public class Gate extends ConfigEntity implements ISignMechanic  {
+public class Gate implements ISignMechanic  {
 
     @NodeType(
             node="enabled",
