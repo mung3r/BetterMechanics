@@ -1,6 +1,8 @@
 package net.edoxile.bettermechanics.mechanics;
 
+import net.edoxile.bettermechanics.exceptions.NonCardinalDirectionException;
 import net.edoxile.bettermechanics.utils.MechanicsConfig;
+import net.edoxile.bettermechanics.utils.SignUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -92,6 +94,27 @@ public class TeleLift {
             }
             return newLocation;
         } else {
+            try {
+                Block b = sign.getBlock().getRelative(SignUtil.getBackBlockFace(sign)).getRelative(SignUtil.getBackBlockFace(sign));
+                if (b.getTypeId() == Material.WALL_SIGN.getId()) {
+                    Sign t = (Sign) b.getState();
+                    locations = sign.getLine(2).split(":");
+                    if (locations.length == 3) {
+                        newLocation.setX(Integer.parseInt(locations[0]) - 0.5);
+                        newLocation.setZ(Integer.parseInt(locations[1]) + 0.5);
+                        newLocation.setY(Integer.parseInt(locations[2]));
+                        if (newLocation.getY() < 2) {
+                            player.sendMessage(ChatColor.RED + "Invalid Y location. Teleporting to y = 130");
+                            newLocation.setY(130);
+                        }
+                        return newLocation;
+                    } else {
+                        return null;
+                    }
+                }
+            } catch (NonCardinalDirectionException e) {
+                return null;
+            }
             return null;
         }
     }
