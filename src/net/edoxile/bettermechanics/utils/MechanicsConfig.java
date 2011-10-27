@@ -1,4 +1,4 @@
-package net.edoxile.bettermechanics.models;
+package net.edoxile.bettermechanics.utils;
 
 import net.edoxile.bettermechanics.BetterMechanics;
 import net.edoxile.bettermechanics.exceptions.ConfigWriteException;
@@ -7,7 +7,6 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.zones.Zones;
 import com.zones.model.ZoneBase;
-import net.edoxile.bettermechanics.utils.CauldronCookbook;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -171,7 +170,7 @@ public class MechanicsConfig {
 
     public class CauldronConfig {
         public final boolean enabled;
-        public final net.edoxile.bettermechanics.utils.CauldronCookbook cauldronCookbook;
+        public final CauldronCookbook cauldronCookbook;
 
         public CauldronConfig() {
             if (config.getBoolean("cauldron.enabled", true)) {
