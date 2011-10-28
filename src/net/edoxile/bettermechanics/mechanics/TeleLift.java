@@ -100,7 +100,7 @@ public class TeleLift {
                 Block b = sign.getBlock().getRelative(SignUtil.getBackBlockFace(sign)).getRelative(SignUtil.getBackBlockFace(sign));
                 if (b.getTypeId() == Material.WALL_SIGN.getId()) {
                     Sign t = (Sign) b.getState();
-                    locations = sign.getLine(2).split(":");
+                    locations = t.getLine(2).split(":");
                     if (locations.length == 3) {
                         newLocation.setX(Integer.parseInt(locations[0]) - 0.5);
                         newLocation.setZ(Integer.parseInt(locations[1]) + 0.5);
