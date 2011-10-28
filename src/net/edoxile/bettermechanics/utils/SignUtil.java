@@ -135,13 +135,13 @@ public class SignUtil {
         } else if (s.getType() == Material.WALL_SIGN) {
             switch (s.getData().getData()) {
                 case 0x2:
-                    return BlockFace.SOUTH;
-                case 0x3:
-                    return BlockFace.NORTH;
-                case 0x4:
-                    return BlockFace.EAST;
-                case 0x5:
                     return BlockFace.WEST;
+                case 0x3:
+                    return BlockFace.EAST;
+                case 0x4:
+                    return BlockFace.SOUTH;
+                case 0x5:
+                    return BlockFace.NORTH;
                 default:
                     throw new NonCardinalDirectionException();
             }

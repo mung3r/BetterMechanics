@@ -39,20 +39,20 @@ public class TeleLift {
         if (!teleLiftConfig.enabled)
             return false;
         destination = parseDestination();
-        if(destination == null)
+        if (destination == null)
             return false;
         if (destination.getY() <= 127) {
             Block dest1 = destination.getBlock();
             Block dest2 = dest1.getRelative(BlockFace.UP);
             Block dest3 = dest1.getRelative(BlockFace.DOWN);
-            if (canPassThrough(dest1.getType()) && canPassThrough(dest2.getType())) {
-                if (canPassThrough(dest3.getType()) && canPassThrough(dest3.getRelative(BlockFace.DOWN).getType())) {
+            if (canPassThrough(dest1.getType()) && canPassThrough(dest3.getType())) {
+                if (canPassThrough(dest3.getRelative(BlockFace.DOWN).getType()) && canPassThrough(dest3.getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN).getType())) {
                     player.sendMessage(ChatColor.RED + "You have no place to stand on!");
                     return false;
                 }
                 return true;
-            } else if (canPassThrough(dest1.getType()) && canPassThrough(dest3.getType())) {
-                if (canPassThrough(dest3.getRelative(BlockFace.DOWN).getType()) && canPassThrough(dest3.getRelative(BlockFace.DOWN).getRelative(BlockFace.DOWN).getType())) {
+            } else if (canPassThrough(dest1.getType()) && canPassThrough(dest2.getType())) {
+                if (canPassThrough(dest3.getType()) && canPassThrough(dest3.getRelative(BlockFace.DOWN).getType())) {
                     player.sendMessage(ChatColor.RED + "You have no place to stand on!");
                     return false;
                 }
@@ -87,7 +87,7 @@ public class TeleLift {
         Location newLocation = player.getLocation();
         String[] locations = sign.getLine(2).split(":");
         if (locations.length == 3) {
-            newLocation.setX(Integer.parseInt(locations[0]) - 0.5);
+            newLocation.setX(Integer.parseInt(locations[0]) + 0.5);
             newLocation.setZ(Integer.parseInt(locations[1]) + 0.5);
             newLocation.setY(Integer.parseInt(locations[2]));
             if (newLocation.getY() < 2) {
@@ -98,11 +98,11 @@ public class TeleLift {
         } else {
             try {
                 Block b = sign.getBlock().getRelative(SignUtil.getBackBlockFace(sign)).getRelative(SignUtil.getBackBlockFace(sign));
-                if (b.getTypeId() == Material.WALL_SIGN.getId()) {
+                if (b.getState() instanceof Sign) {
                     Sign t = (Sign) b.getState();
                     locations = t.getLine(2).split(":");
                     if (locations.length == 3) {
-                        newLocation.setX(Integer.parseInt(locations[0]) - 0.5);
+                        newLocation.setX(Integer.parseInt(locations[0]) + 0.5);
                         newLocation.setZ(Integer.parseInt(locations[1]) + 0.5);
                         newLocation.setY(Integer.parseInt(locations[2]));
                         if (newLocation.getY() < 2) {
