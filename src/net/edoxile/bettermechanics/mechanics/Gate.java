@@ -1,10 +1,12 @@
 package net.edoxile.bettermechanics.mechanics;
 
+import net.edoxile.bettermechanics.BetterMechanics;
 import net.edoxile.configparser.ConfigEntity;
 import net.edoxile.configparser.annotations.*;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,28 +23,28 @@ public class Gate extends ConfigEntity implements ISignMechanic  {
             node="enabled",
             nodeType=Boolean.class
     )
-    public boolean enabled = true;
+    private boolean enabled = true;
 
     @NodeType(
             node="max-length",
             nodeType=Integer.class
     )
-    public int maxLength = 32;
+    private int maxLength = 32;
 
     @NodeType(
             node="max-width",
             nodeType=Integer.class
     )
-    public int maxWidth = 3;
+    private int maxWidth = 3;
 
     @NodeType(
             node="allowed-materials",
             nodeType=Integer.class
     )
-    public List<Integer> materialList = Arrays.asList(Material.IRON_FENCE.getId(), Material.FENCE.getId());
+    private List<Integer> materialList = Arrays.asList(Material.IRON_FENCE.getId(), Material.FENCE.getId());
 
-    public Gate() {
-        //Fill config vars
+    public Gate(BetterMechanics bm) {
+        super(bm);
     }
 
     public void onSignPowerOn(Block sign) {
