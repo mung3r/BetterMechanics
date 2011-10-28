@@ -39,6 +39,8 @@ public class TeleLift {
         if (!teleLiftConfig.enabled)
             return false;
         destination = parseDestination();
+        if(destination == null)
+            return false;
         if (destination.getY() <= 127) {
             Block dest1 = destination.getBlock();
             Block dest2 = dest1.getRelative(BlockFace.UP);
