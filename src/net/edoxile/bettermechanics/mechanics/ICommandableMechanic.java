@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
  *
  * @author Edoxile
  */
-public interface ICommandableMechanic {
-    public void onCommand(Player player, Command command, String[] args);
+public abstract class ICommandableMechanic implements IMechanic{
+    public void onCommand(Player player, Command command, String[] args){
+        return;
+    }
 }

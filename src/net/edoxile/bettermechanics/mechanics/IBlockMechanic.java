@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,16 +12,28 @@ import java.util.List;
  *
  * @author Edoxile
  */
-public interface IBlockMechanic {
-    public void onBlockRightClick(Player player, Block block);
+public abstract class IBlockMechanic implements IMechanic{
+    public void onBlockRightClick(Player player, Block block){
+        return;
+    }
 
-    public void onBlockLeftClick(Player player, Block block);
+    public void onBlockLeftClick(Player player, Block block){
+        return;
+    }
 
-    public void onBlockPowerOn(Player player, Block block);
+    public void onBlockPowerOn(Block block){
+        return;
+    }
 
-    public void onBlockPowerOff(Player player, Block block);
+    public void onBlockPowerOff(Block block){
+        return;
+    }
 
-    public List<Material> getMechanicActivators();
+    public Material getMechanicActivator(){
+        return null;
+    }
 
-    public List<Block> getMechanicTargets();
+    public Block getMechanicTarget(){
+        return null;
+    }
 }

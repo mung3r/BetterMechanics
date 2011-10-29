@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,14 +12,26 @@ import java.util.List;
  *
  * @author Edoxile
  */
-public interface ISignMechanic {
-    public void onSignPowerOn(Block sign);
+public abstract class ISignMechanic implements IMechanic{
+    public void onSignPowerOn(Block sign){
+        return;
+    }
 
-    public void onSignPowerOff(Block sign);
+    public void onSignPowerOff(Block sign){
+        return;
+    }
 
-    public void onPlayerRightClickSign(Player player, Block sign);
+    public void onPlayerRightClickSign(Player player, Block sign){
+        return;
+    }
 
-    public String getIdentifier();
+    public void onPlayerLeftClickSign(Player player, Block sign){
+        return;
+    }
 
-    public List<Material> getMechanicActivators();
+    public abstract String getIdentifier();
+
+    public Material getMechanicActivator(){
+        return null;
+    }
 }
