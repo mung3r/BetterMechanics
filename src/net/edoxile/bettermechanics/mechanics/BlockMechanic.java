@@ -3,6 +3,7 @@ package net.edoxile.bettermechanics.mechanics;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,11 @@ import java.util.List;
  *
  * @author Edoxile
  */
-public abstract class IBlockMechanic implements IMechanic{
+public abstract class BlockMechanic extends Mechanic {
+    public BlockMechanic(Plugin p) {
+        super(p);
+    }
+
     public void onBlockRightClick(Player player, Block block){
         return;
     }
@@ -29,11 +34,7 @@ public abstract class IBlockMechanic implements IMechanic{
         return;
     }
 
-    public Material getMechanicActivator(){
-        return null;
-    }
+    public abstract Material getMechanicActivator();
 
-    public Block getMechanicTarget(){
-        return null;
-    }
+    public abstract Material getMechanicTarget();
 }

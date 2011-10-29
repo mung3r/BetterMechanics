@@ -17,7 +17,7 @@ import java.util.List;
  * @author Edoxile
  */
 @ConfigEntityNode("gate")
-public class Gate extends ConfigEntity implements ISignMechanic  {
+public class Gate extends ISignMechanic  {
 
     @NodeType(
             node="enabled",
@@ -60,10 +60,10 @@ public class Gate extends ConfigEntity implements ISignMechanic  {
     }
 
     public String getIdentifier() {
-        return "Gate";
+        return "[Gate]";
     }
 
-    public List<Material> getMechanicActivators() {
+    public Material getMechanicActivator() {
         return null;
     }
 }

@@ -3,6 +3,7 @@ package net.edoxile.bettermechanics.mechanics;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,11 @@ import java.util.List;
  *
  * @author Edoxile
  */
-public abstract class ISignMechanic implements IMechanic{
+public abstract class SignMechanic extends Mechanic {
+    public SignMechanic(Plugin p) {
+        super(p);
+    }
+
     public void onSignPowerOn(Block sign){
         return;
     }
@@ -31,7 +36,5 @@ public abstract class ISignMechanic implements IMechanic{
 
     public abstract String getIdentifier();
 
-    public Material getMechanicActivator(){
-        return null;
-    }
+    public abstract Material getMechanicActivator();
 }
