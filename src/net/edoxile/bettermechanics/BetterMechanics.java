@@ -1,10 +1,8 @@
 package net.edoxile.bettermechanics;
 
-import net.edoxile.bettermechanics.mechanics.IMechanic;
 import net.edoxile.bettermechanics.models.MechanicsHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

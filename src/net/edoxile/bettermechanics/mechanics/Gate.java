@@ -1,6 +1,7 @@
 package net.edoxile.bettermechanics.mechanics;
 
 import net.edoxile.bettermechanics.BetterMechanics;
+import net.edoxile.bettermechanics.mechanics.interfaces.ISignMechanic;
 import net.edoxile.configparser.ConfigEntity;
 import net.edoxile.configparser.annotations.*;
 import org.bukkit.Material;
@@ -17,34 +18,34 @@ import java.util.List;
  * @author Edoxile
  */
 @ConfigEntityNode("gate")
-public class Gate extends ISignMechanic  {
+public class Gate extends ConfigEntity implements ISignMechanic {
 
     @NodeType(
-            node="enabled",
-            nodeType=Boolean.class
+            node = "enabled",
+            clazz = Boolean.class
     )
     private boolean enabled = true;
 
     @NodeType(
-            node="max-length",
-            nodeType=Integer.class
+            node = "max-length",
+            clazz = Integer.class
     )
     private int maxLength = 32;
 
     @NodeType(
-            node="max-width",
-            nodeType=Integer.class
+            node = "max-width",
+            clazz = Integer.class
     )
     private int maxWidth = 3;
 
     @NodeType(
-            node="allowed-materials",
-            nodeType=Integer.class
+            node = "allowed-materials",
+            clazz = Integer.class
     )
     private List<Integer> materialList = Arrays.asList(Material.IRON_FENCE.getId(), Material.FENCE.getId());
 
-    public Gate(BetterMechanics bm) {
-        super(bm);
+    public Gate(Plugin p) {
+        super(p);
     }
 
     public void onSignPowerOn(Block sign) {
@@ -57,6 +58,9 @@ public class Gate extends ISignMechanic  {
 
     public void onPlayerRightClickSign(Player player, Block sign) {
         //Toggle gate
+    }
+
+    public void onPlayerLeftClickSign(Player player, Block sign) {
     }
 
     public String getIdentifier() {
