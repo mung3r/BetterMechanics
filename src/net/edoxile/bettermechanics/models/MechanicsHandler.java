@@ -42,6 +42,7 @@ public class MechanicsHandler {
             ArrayList<ISignMechanic> signMechanicList = signMechanicMap.get(signMechanic.getIdentifier());
             if (signMechanicList == null) {
                 signMechanicList = new ArrayList<ISignMechanic>();
+
             }
             signMechanicList.add(signMechanic);
             signMechanicMap.put(signMechanic.getIdentifier(), signMechanicList);
@@ -61,6 +62,11 @@ public class MechanicsHandler {
         if (event.getClickedBlock().getTypeId() == Material.WALL_SIGN.getId() || event.getClickedBlock().getTypeId() == Material.SIGN_POST.getId()) {
             Sign sign = (Sign) event.getClickedBlock().getState();
             List<ISignMechanic> mechanicList = signMechanicMap.get(sign.getLine(2));
+            if (mechanicList == null) {
+                mechanicList = signMechanicMap.get("");
+                if (mechanicList == null)
+                    return;
+            }
             for (ISignMechanic mechanic : mechanicList) {
                 if (mechanic != null && (mechanic.getMechanicActivator() == null || mechanic.getMechanicActivator() == event.getPlayer().getItemInHand().getType())) {
                     if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -127,10 +133,11 @@ public class MechanicsHandler {
         }
     }
 
-    public void callCommandEvent(Command command, CommandSender commandSender, String[] args) {
+    public boolean callCommandEvent(Command command, CommandSender commandSender, String[] args) {
         ICommandableMechanic mechanic = commandableMechanicMap.get(command.getName());
         if (mechanic != null) {
-            mechanic.onCommand(commandSender, command, args);
+            return mechanic.onCommand(commandSender, command, args);
         }
+        return false;
     }
 }

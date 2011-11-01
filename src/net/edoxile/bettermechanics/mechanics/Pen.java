@@ -8,6 +8,7 @@ import net.edoxile.configparser.annotations.NodeType;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -51,6 +52,10 @@ public class Pen extends ConfigEntity implements ISignMechanic, ICommandableMech
 
     public void onPlayerLeftClickSign(Player player, Block sign) {
         //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public boolean onCommand(CommandSender commandSender, Command command, String[] args) {
+        return false;
     }
 
     public String getIdentifier() {

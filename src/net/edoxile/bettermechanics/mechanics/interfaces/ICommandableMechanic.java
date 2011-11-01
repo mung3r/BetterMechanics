@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
  */
 public interface ICommandableMechanic extends IMechanic {
 
-    public void onCommand(CommandSender commandSender, Command command, String[] args);
+    public boolean onCommand(CommandSender commandSender, Command command, String[] args);
 
     public String getIdentifier();
 
