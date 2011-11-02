@@ -122,13 +122,13 @@ public class SignUtil {
         if (s.getType() == Material.SIGN_POST) {
             switch (s.getData().getData()) {
                 case 0x0:
-                    return BlockFace.NORTH;
-                case 0x4:
                     return BlockFace.EAST;
-                case 0x8:
+                case 0x4:
                     return BlockFace.SOUTH;
-                case 0xC:
+                case 0x8:
                     return BlockFace.WEST;
+                case 0xC:
+                    return BlockFace.NORTH;
                 default:
                     throw new NonCardinalDirectionException();
             }
