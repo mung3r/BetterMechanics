@@ -5,6 +5,6 @@ package net.edoxile.bettermechanics.models;
  *
  * @author Edoxile
  */
-
-public class BlockMapper {
+public enum PermissionType {
+    BUILD,DESTROY,HIT
 }

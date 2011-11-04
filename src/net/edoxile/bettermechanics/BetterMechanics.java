@@ -3,8 +3,11 @@ package net.edoxile.bettermechanics;
 import net.edoxile.bettermechanics.mechanics.Gate;
 import net.edoxile.bettermechanics.mechanics.Pen;
 import net.edoxile.bettermechanics.models.MechanicsHandler;
+import net.edoxile.bettermechanics.models.PermissionType;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
@@ -31,6 +34,18 @@ public class BetterMechanics extends JavaPlugin {
         log("Disabled.");
     }
 
+    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args){
+        return mechanicsHandler.callCommandEvent(command, commandSender, args);
+    }
+
+    public MechanicsHandler getMechanicsHandler() {
+        return mechanicsHandler;
+    }
+
+    public boolean hasPermission(Player player, Block block, PermissionType type){
+        return true;
+    }
+
     public static void log(String msg) {
         log(msg, Level.INFO);
     }
@@ -38,13 +53,5 @@ public class BetterMechanics extends JavaPlugin {
     public static void log(String msg, Level level) {
         if (debugMode && level == Level.FINEST)
             logger.log(level, "[BetterMechanics] " + msg);
-    }
-
-    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args){
-        return mechanicsHandler.callCommandEvent(command, commandSender, args);
-    }
-
-    public MechanicsHandler getMechanicsHandler() {
-        return mechanicsHandler;
     }
 }
