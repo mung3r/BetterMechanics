@@ -1,5 +1,8 @@
 package net.edoxile.bettermechanics;
 
+import net.edoxile.bettermechanics.listeners.BMBlockListener;
+import net.edoxile.bettermechanics.listeners.BMPlayerListener;
+import net.edoxile.bettermechanics.mechanics.Bridge;
 import net.edoxile.bettermechanics.mechanics.Gate;
 import net.edoxile.bettermechanics.mechanics.Pen;
 import net.edoxile.bettermechanics.models.MechanicsHandler;
@@ -8,6 +11,8 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.block.BlockListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
@@ -22,10 +27,21 @@ public class BetterMechanics extends JavaPlugin {
     private static Logger logger = Logger.getLogger("Minecraft");
     private static boolean debugMode;
     private MechanicsHandler mechanicsHandler = new MechanicsHandler();
+    private BMPlayerListener playerListener = new BMPlayerListener(this);
+    private BMBlockListener blockListener = new BMBlockListener(this);
 
     public void onEnable() {
-        mechanicsHandler.addMechanic(new Gate(this));
-        mechanicsHandler.addMechanic(new Pen(this));
+        //Register different Mechanics
+        /*mechanicsHandler.addMechanic(new Gate(this));
+        mechanicsHandler.addMechanic(new Pen(this));*/
+        mechanicsHandler.addMechanic(new Bridge(this));
+
+        //TODO: Register different events
+        getServer().getPluginManager().registerEvent(Event.Type.BLOCK_BREAK, blockListener, Event.Priority.Normal, this);
+        getServer().getPluginManager().registerEvent(Event.Type.BLOCK_PLACE, blockListener, Event.Priority.Normal, this);
+        getServer().getPluginManager().registerEvent(Event.Type.REDSTONE_CHANGE, blockListener, Event.Priority.Normal, this);
+        getServer().getPluginManager().registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Event.Priority.Normal, this);
+
         debugMode = getConfiguration().getBoolean("debug-mode", false);
         log("Enabled! Version: " + getDescription().getVersion() + ".");
     }
