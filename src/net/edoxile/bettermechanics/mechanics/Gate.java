@@ -3,11 +3,11 @@ package net.edoxile.bettermechanics.mechanics;
 import net.edoxile.bettermechanics.BetterMechanics;
 import net.edoxile.bettermechanics.mechanics.interfaces.ISignMechanic;
 import net.edoxile.configparser.ConfigEntity;
-import net.edoxile.configparser.annotations.*;
+import net.edoxile.configparser.annotations.ConfigEntityNode;
+import net.edoxile.configparser.annotations.NodeType;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,8 +44,12 @@ public class Gate extends ConfigEntity implements ISignMechanic {
     )
     private List<Integer> materialList = Arrays.asList(Material.IRON_FENCE.getId(), Material.FENCE.getId());
 
-    public Gate(Plugin p) {
+    private BetterMechanics plugin = null;
+
+    public Gate(BetterMechanics p) {
         super(p);
+        plugin = p;
+        //loadConfig(p.getConfiguration());
     }
 
     public void onSignPowerOn(Block sign) {

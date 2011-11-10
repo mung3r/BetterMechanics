@@ -1,12 +1,13 @@
 package net.edoxile.configparser;
 
+import net.edoxile.bettermechanics.BetterMechanics;
 import net.edoxile.configparser.annotations.ConfigEntityNode;
 import net.edoxile.configparser.annotations.NodeType;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.util.config.Configuration;
 
 import java.lang.annotation.AnnotationFormatError;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -18,6 +19,7 @@ import java.util.logging.Logger;
  */
 
 public abstract class ConfigEntity {
+
     private enum Classes {
         Integer,
         Boolean,
@@ -38,16 +40,16 @@ public abstract class ConfigEntity {
         }
     }
 
-    protected Plugin plugin = null;
-    protected Configuration config = null;
-    protected static final Logger logger = Logger.getLogger("Minecraft");
+    protected BetterMechanics plugin = null;
+    protected final Logger logger;
 
-    public ConfigEntity(Plugin p) {
+    public ConfigEntity(BetterMechanics p) {
         plugin = p;
-        config = p.getConfiguration();
+        logger = plugin.getLogger();
     }
 
-    public void loadConfig() {
+    @SuppressWarnings("unchecked")
+    public void loadConfig(Configuration config) {
         String objectPrefix, nodeSuffix;
         ConfigEntityNode configEntityNode = this.getClass().getAnnotation(ConfigEntityNode.class);
         if (configEntityNode == null)
@@ -56,52 +58,52 @@ public abstract class ConfigEntity {
 
         Field[] fields = this.getClass().getDeclaredFields();
         try {
-            for (int i = 0; i < fields.length; i++) {
-                NodeType fieldType = fields[i].getAnnotation(NodeType.class);
+            for (Field field : fields) {
+                NodeType fieldType = field.getAnnotation(NodeType.class);
                 if (fieldType != null) {
                     nodeSuffix = fieldType.node();
 
                     //Have to test this...
-                    boolean isList = fields[i].getClass().equals(List.class);
+                    boolean isList = field.getClass().equals(ArrayList.class);
 
-                    switch (Classes.fromName(fieldType.nodeType().getName())) {
+                    switch (Classes.fromName(fieldType.clazz().getName())) {
                         case Boolean:
                             if (isList) {
-                                fields[i].set(this, config.getBooleanList(objectPrefix + "." + nodeSuffix, (List<Boolean>) fields[i].get(this)));
+                                field.set(this, config.getBooleanList(objectPrefix + "." + nodeSuffix, (List<Boolean>) field.get(this)));
                             } else {
-                                fields[i].set(this, config.getBoolean(objectPrefix + "." + nodeSuffix, (Boolean) fields[i].get(this)));
+                                field.set(this, config.getBoolean(objectPrefix + "." + nodeSuffix, (Boolean) field.get(this)));
                             }
                             break;
                         case Double:
                             if (isList) {
-                                fields[i].set(this, config.getDoubleList(objectPrefix + "." + nodeSuffix, (List<Double>) fields[i].get(this)));
+                                field.set(this, config.getDoubleList(objectPrefix + "." + nodeSuffix, (List<Double>) field.get(this)));
                             } else {
-                                fields[i].set(this, config.getDouble(objectPrefix + "." + nodeSuffix, (Double) fields[i].get(this)));
+                                field.set(this, config.getDouble(objectPrefix + "." + nodeSuffix, (Double) field.get(this)));
                             }
                             break;
                         case Integer:
                             if (isList) {
-                                fields[i].set(this, config.getIntList(objectPrefix + "." + nodeSuffix, (List<Integer>) fields[i].get(this)));
+                                field.set(this, config.getIntList(objectPrefix + "." + nodeSuffix, (List<Integer>) field.get(this)));
                             } else {
-                                fields[i].set(this, config.getInt(objectPrefix + "." + nodeSuffix, (Integer) fields[i].get(this)));
+                                field.set(this, config.getInt(objectPrefix + "." + nodeSuffix, (Integer) field.get(this)));
                             }
                             break;
                         case String:
                             if (isList) {
-                                fields[i].set(this, config.getStringList(objectPrefix + "." + nodeSuffix, (List<String>) fields[i].get(this)));
+                                field.set(this, config.getStringList(objectPrefix + "." + nodeSuffix, (List<String>) field.get(this)));
                             } else {
-                                fields[i].set(this, config.getString(objectPrefix + "." + nodeSuffix, (String) fields[i].get(this)));
+                                field.set(this, config.getString(objectPrefix + "." + nodeSuffix, (String) field.get(this)));
                             }
                             break;
                         case Object:
                             if (isList) {
-                                fields[i].set(this, config.getList(objectPrefix + "." + nodeSuffix));
+                                field.set(this, config.getList(objectPrefix + "." + nodeSuffix));
                             } else {
-                                fields[i].set(this, config.getProperty(objectPrefix + "." + nodeSuffix));
+                                field.set(this, config.getProperty(objectPrefix + "." + nodeSuffix));
                             }
                             break;
                         default:
-                            throw new AnnotationFormatError("Class " + fields[i].getClass().getName() + " is not a valid YAML type.");
+                            throw new AnnotationFormatError("Class " + field.getClass().getName() + " is not a valid YAML type.");
                     }
 
                 }
@@ -111,7 +113,7 @@ public abstract class ConfigEntity {
         }
     }
 
-    public void saveConfig() {
+    public void saveConfig(Configuration config) {
         String objectPrefix, nodeSuffix;
         ConfigEntityNode configEntityNode = this.getClass().getAnnotation(ConfigEntityNode.class);
         if (configEntityNode == null)
@@ -120,15 +122,21 @@ public abstract class ConfigEntity {
 
         Field[] fields = this.getClass().getDeclaredFields();
         try {
-            for (int i = 0; i < fields.length; i++) {
-                NodeType fieldType = fields[i].getAnnotation(NodeType.class);
+            for (Field field : fields) {
+                NodeType fieldType = field.getAnnotation(NodeType.class);
                 if (fieldType != null) {
                     nodeSuffix = fieldType.node();
-                    config.setProperty(objectPrefix + "." + nodeSuffix, fields[i].get(this));
+                    field.setAccessible(true);
+                    if (field.getType().getName().equals(List.class.getName())) {
+                        config.setProperty(objectPrefix + "." + nodeSuffix, field.get(this).toString());
+                    } else {
+                        config.setProperty(objectPrefix + "." + nodeSuffix, field.get(this));
+                    }
                 }
             }
         } catch (IllegalAccessException e) {
-            logger.severe("Couldn't set property of entity: " + this.getClass().getName() + " in plugin: " + plugin.getDescription().getName());
+            logger.severe("Couldn't get property of entity: " + this.getClass().getName() + " in plugin: " + plugin.getDescription().getName());
+            logger.severe("Field: " + e.getLocalizedMessage());
         }
     }
 }

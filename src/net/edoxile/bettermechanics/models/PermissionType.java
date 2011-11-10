@@ -6,5 +6,5 @@ package net.edoxile.bettermechanics.models;
  * @author Edoxile
  */
 public enum PermissionType {
-    BUILD,DESTROY,HIT
+    BUILD, DESTROY, HIT
 }

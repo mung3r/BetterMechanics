@@ -16,25 +16,25 @@ public class BMBlockListener extends BlockListener {
     private BetterMechanics plugin;
     private MechanicsHandler mechanicsHandler;
 
-    public BMBlockListener(BetterMechanics bm){
+    public BMBlockListener(BetterMechanics bm) {
         plugin = bm;
         mechanicsHandler = bm.getMechanicsHandler();
     }
 
-    public void onBlockRedstoneChange(BlockRedstoneEvent event){
-        if(event.getNewCurrent() == event.getOldCurrent() || event.getNewCurrent() > 0 && event.getOldCurrent() > 0)
+    public void onBlockRedstoneChange(BlockRedstoneEvent event) {
+        if (event.getNewCurrent() == event.getOldCurrent() || event.getNewCurrent() > 0 && event.getOldCurrent() > 0)
             return;
         mechanicsHandler.callRedstoneEvent(event);
     }
 
-    public void onBlockPlace(BlockPlaceEvent event){
-        if(event.isCancelled())
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (event.isCancelled())
             return;
         mechanicsHandler.callBlockEvent(event);
     }
 
-    public void onBlockBreak(BlockBreakEvent event){
-        if(event.isCancelled())
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (event.isCancelled())
             return;
         mechanicsHandler.callBlockEvent(event);
     }

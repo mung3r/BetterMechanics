@@ -149,9 +149,9 @@ public class MechanicsPlayerListener extends PlayerListener {
                         if (permissions.check(event.getPlayer(), "pen", event.getClickedBlock(), false)) {
                             String[] text = Pen.getLines(event.getPlayer());
                             if (text != null) {
-                                String firstline = ((Sign)sign.getBlock().getState()).getLine(0);
+                                String firstline = ((Sign) sign.getBlock().getState()).getLine(0);
                                 Boolean LocketteSign = firstline.equals("[Private]") || firstline.equals("[More Users]");
-                                if(!LocketteSign) {
+                                if (!LocketteSign) {
                                     SignChangeEvent evt = new SignChangeEvent(sign.getBlock(), event.getPlayer(), text);
                                     event.getPlayer().getServer().getPluginManager().callEvent(evt);
                                     if (!evt.isCancelled()) {
@@ -180,7 +180,7 @@ public class MechanicsPlayerListener extends PlayerListener {
                 Ammeter ammeter = new Ammeter(config, event.getClickedBlock(), event.getPlayer());
                 ammeter.measure();
             } else if (event.getClickedBlock().getTypeId() == Material.CHEST.getId() && event.getPlayer().getItemInHand().getTypeId() == Material.WOOD_HOE.getId()) {
-                if(!Cycler.cycle(event.getPlayer(), event.getClickedBlock(), config)){
+                if (!Cycler.cycle(event.getPlayer(), event.getClickedBlock(), config)) {
                     event.getPlayer().sendMessage(ChatColor.DARK_RED + "You don't have permissions to cycle chests here!");
                     return;
                 } else {

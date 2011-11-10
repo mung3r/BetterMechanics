@@ -4,7 +4,6 @@ import net.edoxile.bettermechanics.listeners.BMBlockListener;
 import net.edoxile.bettermechanics.listeners.BMPlayerListener;
 import net.edoxile.bettermechanics.mechanics.Bridge;
 import net.edoxile.bettermechanics.mechanics.Gate;
-import net.edoxile.bettermechanics.mechanics.Pen;
 import net.edoxile.bettermechanics.models.MechanicsHandler;
 import net.edoxile.bettermechanics.models.PermissionType;
 import org.bukkit.block.Block;
@@ -12,9 +11,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.config.Configuration;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,6 +35,9 @@ public class BetterMechanics extends JavaPlugin {
         //Register different Mechanics
         /*mechanicsHandler.addMechanic(new Gate(this));
         mechanicsHandler.addMechanic(new Pen(this));*/
+        log("Checking config", Level.INFO);
+        checkConfig();
+        log("Checked config", Level.INFO);
         mechanicsHandler.addMechanic(new Bridge(this));
 
         //TODO: Register different events
@@ -50,7 +54,7 @@ public class BetterMechanics extends JavaPlugin {
         log("Disabled.");
     }
 
-    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args){
+    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
         return mechanicsHandler.callCommandEvent(command, commandSender, args);
     }
 
@@ -58,7 +62,7 @@ public class BetterMechanics extends JavaPlugin {
         return mechanicsHandler;
     }
 
-    public boolean hasPermission(Player player, Block block, PermissionType type){
+    public boolean hasPermission(Player player, Block block, PermissionType type) {
         return true;
     }
 
@@ -67,7 +71,37 @@ public class BetterMechanics extends JavaPlugin {
     }
 
     public static void log(String msg, Level level) {
-        if (debugMode && level == Level.FINEST)
+        if (level != Level.FINEST || debugMode)
             logger.log(level, "[BetterMechanics] " + msg);
+    }
+
+    public void checkConfig() {
+        File configFile = new File(getDataFolder(), "config.yml");
+        if (!configFile.canRead()) {
+            try {
+                if (configFile.getParentFile().mkdirs()) {
+                    if (configFile.createNewFile()) {
+                        log("Successfully made new config file.");
+                        Configuration c = getConfiguration();
+                        c.load();
+                        c.setProperty("debug-mode", false);
+                        new Bridge(this).saveConfig(c);
+                        c.save();
+                    } else {
+                        log("Failed to create new config file.");
+                    }
+                } else {
+                    log("Failed to create config dir.");
+                }
+            } catch (IOException e) {
+                log("Couldn't write new config file.");
+            }
+        } else {
+            log("Config file found.");
+        }
+    }
+
+    public Logger getLogger(){
+        return logger;
     }
 }

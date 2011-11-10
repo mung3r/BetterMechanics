@@ -3,13 +3,14 @@ package net.edoxile.bettermechanics.mechanics;
 import net.edoxile.bettermechanics.BetterMechanics;
 import net.edoxile.bettermechanics.mechanics.interfaces.ISignMechanic;
 import net.edoxile.configparser.ConfigEntity;
+import net.edoxile.configparser.annotations.ConfigEntityNode;
 import net.edoxile.configparser.annotations.NodeType;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import java.util.logging.Level;
  *
  * @author Edoxile
  */
+@ConfigEntityNode("bridge")
 public class Bridge extends ConfigEntity implements ISignMechanic {
 
     @NodeType(
@@ -47,10 +49,12 @@ public class Bridge extends ConfigEntity implements ISignMechanic {
     private Sign mechanicSign = null;
     private Block otherSide = null;
     private Material bridgeMaterial = null;
+    private BetterMechanics plugin = null;
 
-    public Bridge(Plugin p) {
+    public Bridge(BetterMechanics p) {
         super(p);
-        this.loadConfig();
+        plugin = p;
+        //loadConfig(plugin.getConfiguration());
     }
 
     public void onSignPowerOn(Block sign) {

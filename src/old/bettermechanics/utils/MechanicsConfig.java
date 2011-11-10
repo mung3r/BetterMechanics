@@ -1,12 +1,12 @@
 package old.bettermechanics.utils;
 
-import old.bettermechanics.BetterMechanics;
-import old.bettermechanics.exceptions.ConfigWriteException;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.zones.Zones;
 import com.zones.model.ZoneBase;
+import old.bettermechanics.BetterMechanics;
+import old.bettermechanics.exceptions.ConfigWriteException;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;

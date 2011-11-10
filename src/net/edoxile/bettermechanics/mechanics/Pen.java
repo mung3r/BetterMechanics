@@ -1,5 +1,6 @@
 package net.edoxile.bettermechanics.mechanics;
 
+import net.edoxile.bettermechanics.BetterMechanics;
 import net.edoxile.bettermechanics.mechanics.interfaces.ICommandableMechanic;
 import net.edoxile.bettermechanics.mechanics.interfaces.ISignMechanic;
 import net.edoxile.configparser.ConfigEntity;
@@ -11,10 +12,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-
-import javax.persistence.NamedNativeQueries;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,8 +33,12 @@ public class Pen extends ConfigEntity implements ISignMechanic, ICommandableMech
     )
     private int tool;
 
-    public Pen(Plugin p) {
+    private BetterMechanics plugin = null;
+
+    public Pen(BetterMechanics p) {
         super(p);
+        plugin = p;
+        //loadConfig(p.getConfiguration());
     }
 
     public void onSignPowerOn(Block sign) {
