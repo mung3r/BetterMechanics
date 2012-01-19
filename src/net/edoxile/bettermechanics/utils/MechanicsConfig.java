@@ -1,15 +1,10 @@
 package net.edoxile.bettermechanics.utils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
 import net.edoxile.bettermechanics.BetterMechanics;
@@ -18,9 +13,9 @@ import net.edoxile.bettermechanics.exceptions.ConfigWriteException;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.util.config.Configuration;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
@@ -31,7 +26,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 public class MechanicsConfig {
     private static final Logger log = Logger.getLogger("Minecraft");
     private static BetterMechanics plugin;
-    private static Configuration config;
+    private static FileConfiguration config;
 
     public BridgeConfig bridgeConfig;
     public GateConfig gateConfig;
@@ -47,13 +42,9 @@ public class MechanicsConfig {
 
     public MechanicsConfig(BetterMechanics p) throws ConfigWriteException {
         plugin = p;
-        config = plugin.getConfiguration();
-        config.load();
-        if (config == null) {
-            createConfig();
-        } else {
-            createConfig();
-        }
+        config = plugin.getConfig();
+        config.options().copyDefaults(true);
+        plugin.saveConfig();
 
         bridgeConfig = new BridgeConfig();
         gateConfig = new GateConfig();
@@ -80,7 +71,10 @@ public class MechanicsConfig {
         public BridgeConfig() {
             enabled = config.getBoolean("bridge.enabled", true);
             maxLength = config.getInt("bridge.max-length", 32);
-            List<Integer> list = config.getIntList("bridge.allowed-materials", Arrays.asList(3, 4, 5, 22, 35, 41, 42, 45, 47, 57, 87, 88, 89, 91));
+            List<Integer> list = config.getIntegerList("bridge.allowed-materials");
+            if (list == null || list.isEmpty()) {
+                list = Arrays.asList(3, 4, 5, 22, 35, 41, 42, 45, 47, 57, 87, 88, 89, 91);
+            }
             Set<Material> hashSet = new HashSet<Material>();
             for (int m : list)
                 hashSet.add(Material.getMaterial(m));
@@ -124,7 +118,10 @@ public class MechanicsConfig {
         public DoorConfig() {
             enabled = config.getBoolean("door.enabled", true);
             maxHeight = config.getInt("door.max-height", 32);
-            List<Integer> list = config.getIntList("door.allowed-materials", Arrays.asList(3, 4, 5, 22, 35, 41, 42, 45, 47, 57, 87, 88, 89, 91));
+            List<Integer> list = config.getIntegerList("door.allowed-materials");
+            if (list == null || list.isEmpty()) {
+                list = Arrays.asList(3, 4, 5, 22, 35, 41, 42, 45, 47, 57, 87, 88, 89, 91);
+            }
             Set<Material> hashSet = new HashSet<Material>();
             for (int m : list)
                 hashSet.add(Material.getMaterial(m));
@@ -271,25 +268,5 @@ public class MechanicsConfig {
 
     public PenConfig getPenConfig() {
         return this.penConfig;
-    }
-
-    private void createConfig() throws ConfigWriteException {
-        File configFile = new File(plugin.getDataFolder(), "config.yml");
-        if (!configFile.canRead()) {
-            try {
-                configFile.getParentFile().mkdirs();
-                JarFile jar = new JarFile(plugin.getConfigFile());
-                JarEntry entry = jar.getJarEntry("config.yml");
-                InputStream is = jar.getInputStream(entry);
-                FileOutputStream os = new FileOutputStream(configFile);
-                byte[] buf = new byte[(int) entry.getSize()];
-                is.read(buf, 0, (int) entry.getSize());
-                os.write(buf);
-                os.close();
-                plugin.getConfiguration().load();
-            } catch (Exception e) {
-                throw new ConfigWriteException();
-            }
-        }
     }
 }
