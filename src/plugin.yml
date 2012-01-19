@@ -1,7 +1,7 @@
 name: BetterMechanics
 main: old.bettermechanics.BetterMechanics
 version: 3.0.0-b000
-authors: Edoxile, Sleaker
+authors: [ Edoxile, Sleaker ]
 website: https://github.com/Sleaker/BetterMechanics
 commands:
     pen:
