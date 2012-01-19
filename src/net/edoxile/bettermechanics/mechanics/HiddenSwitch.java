@@ -14,13 +14,11 @@ import java.util.HashSet;
  */
 public class HiddenSwitch {
     private Sign sign;
-    private Player player;
     private MechanicsConfig.HiddenSwitchConfig config;
     private HashSet<Block> levers;
 
     public HiddenSwitch(MechanicsConfig c, Sign s, Player p) {
         sign = s;
-        player = p;
         config = c.getHiddenSwitchConfig();
     }
 

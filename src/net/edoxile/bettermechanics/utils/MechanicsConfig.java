@@ -1,27 +1,28 @@
 package net.edoxile.bettermechanics.utils;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.logging.Logger;
+
 import net.edoxile.bettermechanics.BetterMechanics;
 import net.edoxile.bettermechanics.exceptions.ConfigWriteException;
-import com.nijiko.permissions.PermissionHandler;
-import com.nijikokun.bukkit.Permissions.Permissions;
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.zones.Zones;
-import com.zones.model.ZoneBase;
+
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.util.config.Configuration;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.*;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.logging.Logger;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 
 /**
  * Created by IntelliJ IDEA.
@@ -65,13 +66,6 @@ public class MechanicsConfig {
         permissionConfig = new PermissionConfig();
         penConfig = new PenConfig();
         useTweakcraftUtils = config.getBoolean("use-tweakcraftutils", false);
-    }
-
-    public void addTeleportHistoryLine(Player player, Location loc) {
-        if (useTweakcraftUtils && plugin.getTweakcraftUtils() != null) {
-            if (plugin.getTweakcraftUtils().getConfigHandler().enableTPBack)
-                plugin.getTweakcraftUtils().getTelehistory().addHistory(player.getName(), loc);
-        }
     }
 
     public void reloadCauldronConfig() {
@@ -197,28 +191,14 @@ public class MechanicsConfig {
     }
 
     public class PermissionConfig {
-        public final boolean usePermissions;
         public final boolean useWorldGuard;
-        public final boolean useZones;
         private WorldGuardPlugin worldGuard = null;
-        private PermissionHandler permissionHandler = null;
-        private Zones zones = null;
 
         public PermissionConfig() {
-            usePermissions = config.getBoolean("use-permissions", true);
             useWorldGuard = config.getBoolean("use-worldguard", true);
-            useZones = config.getBoolean("use-zones", true);
-            if (usePermissions) {
-                this.setupPermissions();
-                log.info("[BetterMechanics] Using Permissions");
-            }
             if (useWorldGuard) {
                 this.setupWorldGuard();
                 log.info("[BetterMechanics] Using WorldGuard");
-            }
-            if (useZones) {
-                this.setupZones();
-                log.info("[BetterMechanics] Using Zones");
             }
         }
 
@@ -231,61 +211,6 @@ public class MechanicsConfig {
             }
         }
 
-        private void setupPermissions() {
-            Plugin permissionsPlugin = plugin.getServer().getPluginManager().getPlugin("Permissions");
-
-            if (this.permissionHandler == null) {
-                if (permissionsPlugin != null) {
-                    this.permissionHandler = ((Permissions) permissionsPlugin).getHandler();
-                } else {
-                    log.info("[BetterMechanics] Permission system not detected, defaulting to OP");
-                }
-            }
-        }
-
-        private void setupZones() {
-            Plugin z = plugin.getServer().getPluginManager().getPlugin("Zones");
-            if (zones == null) {
-                if (z != null) {
-                    zones = (Zones) z;
-                }
-            }
-        }
-
-        public boolean checkZonesCreate(Player player, Block clickedBlock) {
-            if (zones == null) {
-                return true;
-            } else {
-                boolean canbuild = true;
-                ZoneBase zb = zones.getWorldManager(clickedBlock.getWorld()).getActiveZone(clickedBlock);
-                if (zb != null) {
-                    canbuild = zb.getAccess(player).canBuild();
-                }
-                return canbuild;
-            }
-        }
-
-        public boolean checkZonesHit(Player player, Block clickedBlock) {
-            if (zones == null) {
-                return true;
-            } else {
-                boolean canhit = true;
-                ZoneBase zb = zones.getWorldManager(clickedBlock.getWorld()).getActiveZone(clickedBlock);
-                if (zb != null) {
-                    canhit = zb.getAccess(player).canHit();
-                }
-                return canhit;
-            }
-        }
-
-        public boolean checkPermissions(Player player, String permission) {
-            if (permissionHandler == null) {
-                return true;
-            } else {
-                return player.isOp() || permissionHandler.permission(player, "bettermechanics." + permission);
-            }
-        }
-
         public boolean checkWorldGuard(Player player, Block clickedBlock) {
             if (worldGuard == null) {
                 return true;
@@ -294,13 +219,10 @@ public class MechanicsConfig {
             }
         }
 
-        public boolean check(Player player, String type, Block clickedBlock, boolean skipCreateZones, boolean skipHitZones) {
+        public boolean check(Player player, String type, Block clickedBlock) {
             boolean allowed = false;
-            if (checkPermissions(player, type)) {
-                if (checkWorldGuard(player, clickedBlock)) {
-                    if (skipCreateZones || checkZonesCreate(player, clickedBlock))
-                        allowed = skipHitZones || checkZonesHit(player, clickedBlock);
-                }
+            if (player.hasPermission("bettermechanics." + type)) {
+                allowed = checkWorldGuard(player, clickedBlock);
             }
 
             if (!allowed) {
@@ -308,10 +230,6 @@ public class MechanicsConfig {
             }
 
             return allowed;
-        }
-
-        public boolean check(Player player, String type, Block clickedBlock, boolean skipZones) {
-            return check(player, type, clickedBlock, skipZones, true);
         }
     }
 

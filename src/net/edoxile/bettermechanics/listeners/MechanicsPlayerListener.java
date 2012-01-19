@@ -23,7 +23,6 @@ import java.util.logging.Logger;
  */
 
 public class MechanicsPlayerListener extends PlayerListener {
-    private static final Logger log = Logger.getLogger("Minecraft");
     private MechanicsConfig config;
     private MechanicsConfig.PermissionConfig permissions;
 
@@ -49,7 +48,7 @@ public class MechanicsPlayerListener extends PlayerListener {
                         switch (SignUtil.getActiveMechanicsType(sign)) {
                             case BRIDGE:
                             case SMALL_BRIDGE:
-                                if (!permissions.check(event.getPlayer(), SignUtil.getActiveMechanicsType(sign).name().toLowerCase().concat(".use"), event.getClickedBlock(), false))
+                                if (!permissions.check(event.getPlayer(), SignUtil.getActiveMechanicsType(sign).name().toLowerCase().concat(".use"), event.getClickedBlock()))
                                     return;
                                 Bridge bridge = new Bridge(config, sign, event.getPlayer());
                                 try {
@@ -73,7 +72,7 @@ public class MechanicsPlayerListener extends PlayerListener {
                                 break;
                             case GATE:
                             case SMALL_GATE:
-                                if (!permissions.check(event.getPlayer(), SignUtil.getActiveMechanicsType(sign).name().toLowerCase().concat(".use"), event.getClickedBlock(), false))
+                                if (!permissions.check(event.getPlayer(), SignUtil.getActiveMechanicsType(sign).name().toLowerCase().concat(".use"), event.getClickedBlock()))
                                     return;
                                 Gate gate = new Gate(config, sign, event.getPlayer());
                                 try {
@@ -97,7 +96,7 @@ public class MechanicsPlayerListener extends PlayerListener {
                                 break;
                             case DOOR:
                             case SMALL_DOOR:
-                                if (!permissions.check(event.getPlayer(), SignUtil.getActiveMechanicsType(sign).name().toLowerCase().concat(".use"), event.getClickedBlock(), false))
+                                if (!permissions.check(event.getPlayer(), SignUtil.getActiveMechanicsType(sign).name().toLowerCase().concat(".use"), event.getClickedBlock()))
                                     return;
                                 Door door = new Door(config, sign, event.getPlayer());
                                 try {
@@ -119,7 +118,7 @@ public class MechanicsPlayerListener extends PlayerListener {
                                 }
                                 break;
                             case LIFT:
-                                if (!permissions.check(event.getPlayer(), SignUtil.getActiveMechanicsType(sign).name().toLowerCase().concat(".use"), event.getClickedBlock(), true, false))
+                                if (!permissions.check(event.getPlayer(), SignUtil.getActiveMechanicsType(sign).name().toLowerCase().concat(".use"), event.getClickedBlock()))
                                     return;
                                 Lift lift = new Lift(config, sign, event.getPlayer());
                                 try {
@@ -132,7 +131,7 @@ public class MechanicsPlayerListener extends PlayerListener {
                                 }
                                 break;
                             case TELELIFT:
-                                if (!permissions.check(event.getPlayer(), SignUtil.getActiveMechanicsType(sign).name().toLowerCase().concat(".use"), event.getClickedBlock(), true, false))
+                                if (!permissions.check(event.getPlayer(), SignUtil.getActiveMechanicsType(sign).name().toLowerCase().concat(".use"), event.getClickedBlock()))
                                     return;
                                 TeleLift tlift = new TeleLift(config, sign, event.getPlayer());
                                 try {
@@ -146,7 +145,7 @@ public class MechanicsPlayerListener extends PlayerListener {
                                 break;
                         }
                     } else if (event.getPlayer().getItemInHand().getType() == config.getPenConfig().penMaterial) {
-                        if (permissions.check(event.getPlayer(), "pen", event.getClickedBlock(), false)) {
+                        if (permissions.check(event.getPlayer(), "pen", event.getClickedBlock())) {
                             String[] text = Pen.getLines(event.getPlayer());
                             if (text != null) {
                                 String firstline = ((Sign)sign.getBlock().getState()).getLine(0);
@@ -174,24 +173,16 @@ public class MechanicsPlayerListener extends PlayerListener {
                     }
                 }
             } else if (event.getClickedBlock().getTypeId() == Material.REDSTONE_WIRE.getId() && event.getPlayer().getItemInHand().getTypeId() == Material.COAL.getId()) {
-                if (!permissions.check(event.getPlayer(), "ammeter", event.getClickedBlock(), true)) {
+                if (!permissions.check(event.getPlayer(), "ammeter", event.getClickedBlock())) {
                     return;
                 }
                 Ammeter ammeter = new Ammeter(config, event.getClickedBlock(), event.getPlayer());
                 ammeter.measure();
-            } else if (event.getClickedBlock().getTypeId() == Material.CHEST.getId() && event.getPlayer().getItemInHand().getTypeId() == Material.WOOD_HOE.getId()) {
-                if(!Cycler.cycle(event.getPlayer(), event.getClickedBlock(), config)){
-                    event.getPlayer().sendMessage(ChatColor.DARK_RED + "You don't have permissions to cycle chests here!");
-                    return;
-                } else {
-                    event.setCancelled(true);
-                    return;
-                }
             } else {
                 if (!event.getPlayer().getItemInHand().getType().isBlock() || event.getPlayer().getItemInHand().getType() == Material.AIR) {
                     Cauldron cauldron = Cauldron.preCauldron(event.getClickedBlock(), config, event.getPlayer());
                     if (cauldron != null) {
-                        if (permissions.check(event.getPlayer(), "cauldron", event.getClickedBlock(), false)) {
+                        if (permissions.check(event.getPlayer(), "cauldron", event.getClickedBlock())) {
                             cauldron.performCauldron();
                         } else {
                             return;
@@ -207,7 +198,7 @@ public class MechanicsPlayerListener extends PlayerListener {
                     if (SignUtil.isSign(event.getClickedBlock().getRelative(b))) {
                         Sign sign = SignUtil.getSign(event.getClickedBlock().getRelative(b));
                         if (SignUtil.getMechanicsType(sign) == MechanicsType.HIDDEN_SWITCH) {
-                            if (permissions.check(event.getPlayer(), "hidden_switch.use", event.getClickedBlock(), true, false)) {
+                            if (permissions.check(event.getPlayer(), "hidden_switch.use", event.getClickedBlock())) {
                                 HiddenSwitch hiddenSwitch = new HiddenSwitch(config, sign, event.getPlayer());
                                 if (hiddenSwitch.map())
                                     hiddenSwitch.toggleLevers();

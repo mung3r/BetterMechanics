@@ -19,7 +19,6 @@ import java.util.logging.Logger;
  */
 public class BlockMapper {
     private static final Logger log = Logger.getLogger("Minecraft");
-    private static HashSet<Block> recursiveSet = new HashSet<Block>();
     private static int maxTraverse = 128;
 
     public static HashSet<Block> mapHorizontal(BlockFace direction, Block start, Block end, boolean small) throws InvalidDirectionException {

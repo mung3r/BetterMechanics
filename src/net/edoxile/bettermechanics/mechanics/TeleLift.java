@@ -67,10 +67,8 @@ public class TeleLift {
     }
 
     public boolean movePlayer() {
-        Location oldloc = player.getLocation();
         if (player.teleport(destination)) {
             player.sendMessage(ChatColor.GOLD + "You magically teleported to an other location!");
-            config.addTeleportHistoryLine(player, oldloc);
             return true;
         } else {
             player.sendMessage(ChatColor.RED + "Something went wrong teleporting you!");

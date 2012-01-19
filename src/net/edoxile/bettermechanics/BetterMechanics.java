@@ -1,11 +1,14 @@
 package net.edoxile.bettermechanics;
 
-import com.guntherdw.bukkit.tweakcraft.TweakcraftUtils;
+import java.io.File;
+import java.util.logging.Logger;
+
 import net.edoxile.bettermechanics.exceptions.ConfigWriteException;
 import net.edoxile.bettermechanics.listeners.MechanicsBlockListener;
 import net.edoxile.bettermechanics.listeners.MechanicsPlayerListener;
 import net.edoxile.bettermechanics.mechanics.Pen;
 import net.edoxile.bettermechanics.utils.MechanicsConfig;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -13,10 +16,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.Plugin;
-
-import java.io.File;
-import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,7 +25,6 @@ public class BetterMechanics extends JavaPlugin {
     public static final Logger log = Logger.getLogger("Minecraft");
     private MechanicsPlayerListener playerListener;
     private MechanicsBlockListener blockListener;
-    private TweakcraftUtils tcutils = null;
     private MechanicsConfig configManager;
     private File configFile;
 
@@ -41,10 +39,6 @@ public class BetterMechanics extends JavaPlugin {
             blockListener = new MechanicsBlockListener(configManager);
             playerListener = new MechanicsPlayerListener(configManager);
             registerEvents();
-            if (configManager.useTweakcraftUtils) {
-                log.info("[BetterMechanics] Using TweakcraftUtils!");
-                setupTweakcraftUtils();
-            }
             log.info("[BetterMechanics] Loading completed.");
         } catch (ConfigWriteException ex) {
             log.severe("[BetterMechanics] Couldn't create config file.");
@@ -77,29 +71,28 @@ public class BetterMechanics extends JavaPlugin {
                     if (args.length == 0) {
                         player.sendMessage(ChatColor.DARK_RED + "Incorrect usage. Usage: /pen [set|clear|setline|help]");
                     } else {
-                        Pen pen = new Pen();
                         if (args[0].equalsIgnoreCase("set")) {
                             if (args.length < 2) {
                                 player.sendMessage(ChatColor.DARK_RED + "Too few arguments.");
                             } else {
-                                pen.setLines(player, args);
+                                Pen.setLines(player, args);
                             }
                         } else if (args[0].equalsIgnoreCase("clear")) {
-                            pen.clear(player);
+                            Pen.clear(player);
                             player.sendMessage(ChatColor.GOLD + "Pen data cleared.");
                         } else if (args[0].equalsIgnoreCase("dump")) {
-                            pen.dump(player);
+                            Pen.dump(player);
                         } else if (args[0].equalsIgnoreCase("setline")) {
                             if (args.length < 3) {
                                 player.sendMessage(ChatColor.DARK_RED + "Too few arguments.");
                             } else {
-                                pen.setLine(player, args);
+                                Pen.setLine(player, args);
                             }
                         } else if (args[0].equalsIgnoreCase("setline")) {
                             if (args.length < 2) {
                                 player.sendMessage(ChatColor.DARK_RED + "Too few arguments.");
                             } else {
-                                pen.clearLine(player, args);
+                                Pen.clearLine(player, args);
                             }
                         } else if (args[0].equalsIgnoreCase("help")) {
                             player.sendMessage("Pen help. The char '^' is a linebreak. Commands:");
@@ -120,7 +113,7 @@ public class BetterMechanics extends JavaPlugin {
             sender.sendMessage(ChatColor.DARK_RED + "The pen is not enabled.");
             return true;
         } else if (command.getName().equalsIgnoreCase("bettermechanics")) {
-            if (sender instanceof Player && !configManager.permissionConfig.checkPermissions((Player) sender, "bettermechanics.reloadconfig"))
+            if (!sender.hasPermission("bettermechanics.reloadconfig"))
                 return true;
             if (args.length == 0) {
                 sender.sendMessage(ChatColor.RED + "I need to know what to do!");
@@ -154,16 +147,5 @@ public class BetterMechanics extends JavaPlugin {
         } else {
             return false;
         }
-    }
-
-    public void setupTweakcraftUtils() {
-        Plugin plugin = this.getServer().getPluginManager().getPlugin("TweakcraftUtils");
-        if (tcutils == null)
-            if (plugin != null)
-                tcutils = (TweakcraftUtils) plugin;
-    }
-
-    public TweakcraftUtils getTweakcraftUtils() {
-        return tcutils;
     }
 }

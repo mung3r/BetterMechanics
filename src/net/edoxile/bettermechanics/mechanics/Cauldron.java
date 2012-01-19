@@ -78,6 +78,7 @@ public class Cauldron {
         recipes = c.getCauldronConfig().cauldronCookbook;
     }
 
+    @SuppressWarnings("deprecation")
     public boolean performCauldron() {
         MaterialMap map = new MaterialMap();
 
