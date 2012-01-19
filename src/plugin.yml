@@ -1,5 +1,5 @@
 name: BetterMechanics
-main: net.bettermechanics.BetterMechanics
+main: net.edoxile.bettermechanics.BetterMechanics
 version: 3.0.0-b000
 authors: [ Edoxile, Sleaker ]
 website: https://github.com/Sleaker/BetterMechanics
