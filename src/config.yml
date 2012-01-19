@@ -5,7 +5,7 @@ bridge:
 gate:
     enabled: true
     max-length: 32
-    max-width: 3
+    max-width: 6
 door:
     enabled: true
     max-height: 32
