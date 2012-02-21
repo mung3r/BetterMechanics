@@ -9,7 +9,7 @@ import net.edoxile.bettermechanics.BetterMechanics;
 import net.edoxile.bettermechanics.exceptions.KeyNotFoundException;
 import net.edoxile.bettermechanics.utils.MaterialMap;
 import net.edoxile.bettermechanics.utils.MaterialMapIterator;
-import org.bukkit.util.config.Configuration;
+import net.edoxile.bettermechanics.utils.config.Configuration;
 
 import java.io.File;
 import java.util.ArrayList;

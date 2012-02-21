@@ -5,4 +5,9 @@ package net.edoxile.bettermechanics.exceptions;
  * User: Edoxile
  */
 public class NonCardinalDirectionException extends Exception {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 8106627105792697686L;
 }

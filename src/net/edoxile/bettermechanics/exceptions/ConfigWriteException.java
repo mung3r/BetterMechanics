@@ -5,4 +5,9 @@ package net.edoxile.bettermechanics.exceptions;
  * User: Edoxile
  */
 public class ConfigWriteException extends Exception {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -4158724189106640992L;
 }

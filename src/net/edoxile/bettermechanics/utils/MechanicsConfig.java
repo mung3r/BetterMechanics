@@ -14,13 +14,13 @@ import java.util.logging.Logger;
 
 import net.edoxile.bettermechanics.BetterMechanics;
 import net.edoxile.bettermechanics.exceptions.ConfigWriteException;
+import net.edoxile.bettermechanics.utils.config.Configuration;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.util.config.Configuration;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 

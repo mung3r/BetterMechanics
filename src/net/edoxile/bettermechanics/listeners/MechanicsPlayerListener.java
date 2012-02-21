@@ -1,32 +1,47 @@
 package net.edoxile.bettermechanics.listeners;
 
+import net.edoxile.bettermechanics.BetterMechanics;
 import net.edoxile.bettermechanics.MechanicsType;
-import net.edoxile.bettermechanics.exceptions.*;
-import net.edoxile.bettermechanics.mechanics.*;
+import net.edoxile.bettermechanics.exceptions.BlockNotFoundException;
+import net.edoxile.bettermechanics.exceptions.ChestNotFoundException;
+import net.edoxile.bettermechanics.exceptions.InvalidMaterialException;
+import net.edoxile.bettermechanics.exceptions.NonCardinalDirectionException;
+import net.edoxile.bettermechanics.exceptions.OutOfBoundsException;
+import net.edoxile.bettermechanics.mechanics.Ammeter;
+import net.edoxile.bettermechanics.mechanics.Bridge;
+import net.edoxile.bettermechanics.mechanics.Cauldron;
+import net.edoxile.bettermechanics.mechanics.Door;
+import net.edoxile.bettermechanics.mechanics.Gate;
+import net.edoxile.bettermechanics.mechanics.HiddenSwitch;
+import net.edoxile.bettermechanics.mechanics.Lift;
+import net.edoxile.bettermechanics.mechanics.Pen;
+import net.edoxile.bettermechanics.mechanics.TeleLift;
 import net.edoxile.bettermechanics.utils.MechanicsConfig;
 import net.edoxile.bettermechanics.utils.SignUtil;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerListener;
-
-import java.util.logging.Logger;
 
 /**
  * Created by IntelliJ IDEA.
  * User: Edoxile
  */
 
-public class MechanicsPlayerListener extends PlayerListener {
+public class MechanicsPlayerListener implements Listener {
     private MechanicsConfig config;
     private MechanicsConfig.PermissionConfig permissions;
 
-    public MechanicsPlayerListener(MechanicsConfig c) {
+    public MechanicsPlayerListener(MechanicsConfig c, BetterMechanics plugin) {
+        Bukkit.getPluginManager().registerEvents(this, plugin);
         config = c;
         permissions = c.getPermissionConfig();
     }
@@ -35,10 +50,12 @@ public class MechanicsPlayerListener extends PlayerListener {
         config = c;
     }
 
+    @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Pen.clear(event.getPlayer());
     }
 
+    @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             if (SignUtil.isSign(event.getClickedBlock())) {
@@ -189,7 +206,7 @@ public class MechanicsPlayerListener extends PlayerListener {
                         }
                     }
                 }
-                if (isRedstoneBlock(event.getClickedBlock().getTypeId()))
+                if (isRedstoneBlock(event.getClickedBlock().getType()))
                     return;
 
                 // BlockFace[] toCheck = {BlockFace.WEST, BlockFace.EAST, BlockFace.SOUTH, BlockFace.NORTH, BlockFace.DOWN, BlockFace.UP};
@@ -217,15 +234,20 @@ public class MechanicsPlayerListener extends PlayerListener {
      * @param id
      * @return
      */
-    public static boolean isRedstoneBlock(int id) {
-        return id == Material.LEVER.getId()
-                || id == Material.STONE_PLATE.getId()
-                || id == Material.WOOD_PLATE.getId()
-                || id == Material.REDSTONE_TORCH_ON.getId()
-                || id == Material.REDSTONE_TORCH_OFF.getId()
-                || id == Material.STONE_BUTTON.getId()
-                || id == Material.REDSTONE_WIRE.getId()
-                || id == Material.WOODEN_DOOR.getId()
-                || id == Material.IRON_DOOR.getId();
+    public static boolean isRedstoneBlock(Material mat) {
+        switch (mat) {
+        case LEVER :
+        case STONE_PLATE :
+        case WOOD_PLATE :
+        case REDSTONE_TORCH_ON :
+        case REDSTONE_TORCH_OFF :
+        case STONE_BUTTON :
+        case REDSTONE_WIRE :
+        case WOODEN_DOOR :
+        case IRON_DOOR :
+            return true;
+        default:
+            return false;
+        }
     }
 }

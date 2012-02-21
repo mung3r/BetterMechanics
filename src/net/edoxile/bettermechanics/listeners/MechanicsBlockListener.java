@@ -1,14 +1,18 @@
 package net.edoxile.bettermechanics.listeners;
 
+import net.edoxile.bettermechanics.BetterMechanics;
 import net.edoxile.bettermechanics.mechanics.Bridge;
 import net.edoxile.bettermechanics.mechanics.Door;
 import net.edoxile.bettermechanics.mechanics.Gate;
 import net.edoxile.bettermechanics.utils.MechanicsConfig;
 import net.edoxile.bettermechanics.utils.SignUtil;
+
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.event.block.BlockListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.block.SignChangeEvent;
@@ -18,11 +22,12 @@ import org.bukkit.event.block.SignChangeEvent;
  * User: Edoxile
  */
 
-public class MechanicsBlockListener extends BlockListener {
+public class MechanicsBlockListener implements Listener {
     private MechanicsConfig config;
     private MechanicsConfig.PermissionConfig permissions;
 
-    public MechanicsBlockListener(MechanicsConfig c) {
+    public MechanicsBlockListener(MechanicsConfig c, BetterMechanics plugin) {
+        Bukkit.getPluginManager().registerEvents(this, plugin);
         config = c;
         permissions = c.getPermissionConfig();
     }
@@ -31,6 +36,7 @@ public class MechanicsBlockListener extends BlockListener {
         config = c;
     }
 
+    @EventHandler
     public void onSignChange(SignChangeEvent event) {
         String str = event.getLine(1);
         if (SignUtil.getMechanicsType(str) == null) {
@@ -99,6 +105,7 @@ public class MechanicsBlockListener extends BlockListener {
         }
     }
 
+    @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         Block block = event.getBlockAgainst();
         if (SignUtil.isSign(block)) {
@@ -109,6 +116,7 @@ public class MechanicsBlockListener extends BlockListener {
         }
     }
 
+    @EventHandler
     public void onBlockRedstoneChange(BlockRedstoneEvent event) {
         if ((event.getNewCurrent() == event.getOldCurrent()) || (event.getNewCurrent() > 0 && event.getOldCurrent() > 0))
             return;

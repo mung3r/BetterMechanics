@@ -8,13 +8,12 @@ import net.edoxile.bettermechanics.listeners.MechanicsBlockListener;
 import net.edoxile.bettermechanics.listeners.MechanicsPlayerListener;
 import net.edoxile.bettermechanics.mechanics.Pen;
 import net.edoxile.bettermechanics.utils.MechanicsConfig;
+import net.edoxile.bettermechanics.utils.config.Configuration;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -25,6 +24,7 @@ public class BetterMechanics extends JavaPlugin {
     public static final Logger log = Logger.getLogger("Minecraft");
     private MechanicsPlayerListener playerListener;
     private MechanicsBlockListener blockListener;
+    private Configuration config = null;
     private MechanicsConfig configManager;
     private File configFile;
 
@@ -36,9 +36,8 @@ public class BetterMechanics extends JavaPlugin {
         try {
             configFile = this.getFile();
             configManager = new MechanicsConfig(this);
-            blockListener = new MechanicsBlockListener(configManager);
-            playerListener = new MechanicsPlayerListener(configManager);
-            registerEvents();
+            blockListener = new MechanicsBlockListener(configManager, this);
+            playerListener = new MechanicsPlayerListener(configManager, this);
             log.info("[BetterMechanics] Loading completed.");
         } catch (ConfigWriteException ex) {
             log.severe("[BetterMechanics] Couldn't create config file.");
@@ -52,15 +51,6 @@ public class BetterMechanics extends JavaPlugin {
 
     public String getName() {
         return getDescription().getName();
-    }
-
-    public void registerEvents() {
-        PluginManager pm = this.getServer().getPluginManager();
-        pm.registerEvent(Event.Type.SIGN_CHANGE, blockListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.REDSTONE_CHANGE, blockListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.BLOCK_PLACE, blockListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -147,5 +137,13 @@ public class BetterMechanics extends JavaPlugin {
         } else {
             return false;
         }
+    }
+    
+    public Configuration getConfiguration() {
+        if (config == null) {
+            config = new Configuration(configFile);
+            config.load();
+        }
+        return config;
     }
 }

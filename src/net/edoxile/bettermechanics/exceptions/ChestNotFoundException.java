@@ -5,4 +5,9 @@ package net.edoxile.bettermechanics.exceptions;
  * User: Edoxile
  */
 public class ChestNotFoundException extends Exception {
+
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 5624189520020785994L;
 }
