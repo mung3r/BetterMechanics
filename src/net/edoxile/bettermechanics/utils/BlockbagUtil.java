@@ -56,8 +56,10 @@ public class BlockbagUtil {
             }
         }
         if (itemStack.getAmount() > 0) {
+            /*
             log.warning("[BetterMechanics] Not enough items in chest, no changes were made.");
             log.warning("[BetterMechanics] Chest location: " + chest.getBlock().getLocation().toString() + ".");
+            */
             throw new OutOfMaterialException(itemStack.getAmount());
         } else {
             chest.getInventory().setContents(stacks);
