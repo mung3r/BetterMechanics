@@ -22,6 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class BetterMechanics extends JavaPlugin {
     public static final Logger log = Logger.getLogger("Minecraft");
+    private static final File dataFolder = new File("plugins" + File.separator + "BetterMechanics");
     private MechanicsPlayerListener playerListener;
     private MechanicsBlockListener blockListener;
     private Configuration config = null;
@@ -34,7 +35,7 @@ public class BetterMechanics extends JavaPlugin {
 
     public void onEnable() {
         try {
-            configFile = this.getFile();
+            configFile = new File(dataFolder, "config.yml");
             configManager = new MechanicsConfig(this);
             blockListener = new MechanicsBlockListener(configManager, this);
             playerListener = new MechanicsPlayerListener(configManager, this);
@@ -47,10 +48,6 @@ public class BetterMechanics extends JavaPlugin {
 
     public File getConfigFile() {
         return configFile;
-    }
-
-    public String getName() {
-        return getDescription().getName();
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
